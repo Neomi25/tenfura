@@ -1,0 +1,42 @@
+trigger: none   # 對應 workflow_dispatch（手動觸發）
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  IMAGE_NAME: 'oden'
+
+steps:
+- checkout: self
+
+#  build docker image
+- script: |
+    docker build . --file Dockerfile --tag $(IMAGE_NAME) --label "runnumber=$(Build.BuildId)"
+  displayName: Build image
+
+#  login to GHCR
+# - script: |
+#     echo $(GHCR_TOKEN) | docker login ghcr.io -u $(GHCR_USERNAME) --password-stdin
+#   displayName: Login to GHCR
+
+#  push image
+# - script: |
+#     IMAGE_ID=ghcr.io/$(Build.Repository.Name)/$(IMAGE_NAME)
+
+#     # 轉小寫
+#     IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+#     # 取得 branch / tag
+#     VERSION=$(Build.SourceBranchName)
+
+#     # main → latest
+#     if [ "$VERSION" = "main" ]; then
+#       VERSION=latest
+#     fi
+
+#     echo IMAGE_ID=$IMAGE_ID
+#     echo VERSION=$VERSION
+
+#     docker tag $(IMAGE_NAME) $IMAGE_ID:$VERSION
+#     docker push $IMAGE_ID:$VERSION
+#   displayName: Push image

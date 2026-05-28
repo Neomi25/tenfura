@@ -9,6 +9,16 @@ variables:
 steps:
 - checkout: self
 
+#  print important parameters before build
+- script: |
+    echo "=== Build Parameters ==="
+    echo "IMAGE_NAME: $(IMAGE_NAME)"
+    echo "Build.BuildId: $(Build.BuildId)"
+    echo "Build.Repository.Name: $(Build.Repository.Name)"
+    echo "Build.SourceBranchName: $(Build.SourceBranchName)"
+    echo "========================"
+  displayName: Print build parameters
+
 #  build docker image
 - script: |
     docker build . --file Dockerfile --tag $(IMAGE_NAME) --label "runnumber=$(Build.BuildId)"
